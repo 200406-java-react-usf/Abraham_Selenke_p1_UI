@@ -108,3 +108,7 @@ dist
 build
 target
 dist
+
+#random
+.DS_Store
+src/.DS_Store
