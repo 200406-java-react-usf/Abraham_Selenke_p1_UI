@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core';
-//import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper } from '@material-ui/core';
 import { User } from '../models/user';
 import { getAllUsers } from '../remote/user-service';
 import { Link } from 'react-router-dom';
@@ -12,21 +11,14 @@ interface IUserProps {
 
 const useStyles = makeStyles({
     userContainer: {
-      width: '100%',
-      margin: '100',
       textAlign: 'center',
       justifyContent: 'center',
       alignItems: 'center',
       display: 'flex',
-      transform: 'scale(1)',
     },
     userForm: {
         fontSize: "24pt",
-        border: "100",
-        padding: "15px"
-    },
-    table: {
-        minWidth: 650,
+        padding: "25px"
     },
 });
 
@@ -52,6 +44,9 @@ const UserComponent = (props: IUserProps) => {
                         <td><Link to={'/edit'} onClick={ () => {
                             props.editUser({...user})}}>edit</Link>
                         </td>
+                        <td><Link to={'/delete'} onClick={ () => {
+                            props.editUser({...user})}}>delete</Link>
+                        </td>
                     </tr>
                 )
             }
@@ -72,38 +67,10 @@ const UserComponent = (props: IUserProps) => {
         </>
         :
         <>
-            {/* <TableContainer component={Paper}>
-                <Table className={classes.table} aria-label="simple table">
-                    <TableHead>
-                    <TableRow>
-                        <TableCell>Id </TableCell>
-                        <TableCell align="right">First Name</TableCell>
-                        <TableCell align="right">Last Name</TableCell>
-                        <TableCell align="right">Username</TableCell>
-                        <TableCell align="right">User Email</TableCell>
-                        <TableCell align="right">User Role</TableCell>
-                    </TableRow>
-                    </TableHead>
-                    <TableBody>
-                    {users.map((user) => (
-                        <TableRow key={user.id}>
-                        <TableCell component="th" scope="row">
-                            {user.id}
-                        </TableCell>
-                        <TableCell align="right">{user.firstName}</TableCell>
-                        <TableCell align="right">{user.lastName}</TableCell>
-                        <TableCell align="right">{user.username}</TableCell>
-                        <TableCell align="right">{user.email}</TableCell>
-                        <TableCell align="right">{user.roles}</TableCell>
-                        </TableRow>
-                    ))}
-                    </TableBody>
-                </Table>
-            </TableContainer> */}
             <div className={classes.userContainer}>
                 <form className={classes.userForm}>
                     <h1 >Users Information</h1>
-                    <table>
+                    <table className="table table-hover">
                         <thead>
                             <tr>
                                 <th scope="col">Id</th>
@@ -112,6 +79,8 @@ const UserComponent = (props: IUserProps) => {
                                 <th scope="col">Username</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">Role</th>
+                                <th scope="col">Update</th>
+                                <th scope="col">Delete</th>
                             </tr>
                         </thead>
                         <tbody>
