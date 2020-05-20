@@ -9,6 +9,8 @@ import NavbarComponent from './components/NavbarComponent';
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import RegisterComponent from './components/RegistrationComponent';
 import UserComponent from './components/UserComponent';
+import UpdateComponent from './components/editUserComponent';
+
 
 
 function App() {
@@ -18,7 +20,7 @@ function App() {
   // @ts-ignore
   const [newUser, setNewUser] = useState(new User(0, '', '', '', '', '', 'Employee'));
 // @ts-ignore
-const [editUser, setEditUser] = useState(new User(0, '', '', '', '', '', 'Employee'));
+const [editUser, setEditUser] = useState(null as User);
 
   return (
     <>
@@ -37,6 +39,7 @@ const [editUser, setEditUser] = useState(new User(0, '', '', '', '', '', 'Employ
           <Route path="/login" render={() => <LoginComponent authUser={authUser} setAuthUser={setAuthUser} /> } />
           <Route path = "/users" render = {() => <UserComponent authUser = {authUser} editUser = {setEditUser}/> } />
           <Route path="/register" render={() => <RegisterComponent newUser={newUser} setNewUser = {setNewUser} /> } />
+          <Route path="/edit" render={() => <UpdateComponent authUser={authUser} updateUser = {editUser} /> } />
         </Switch>
         
       </Router>
