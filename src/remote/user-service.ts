@@ -4,3 +4,11 @@ export async function newUser(username: string, password: string, firstName: str
     let response = await project1Client.post('/register', {username, password, firstName, lastName, email});
     return await response.data;
 }
+
+export async function getAllUsers(){
+    let resp = await project1Client.get('/users',{
+        withCredentials: true
+    });
+    console.log(resp.data);
+    return await resp.data;
+}

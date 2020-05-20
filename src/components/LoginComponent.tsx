@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, SyntheticEvent } from 'react';
 
 import { Alert } from '@material-ui/lab';
 import { 
@@ -12,7 +12,7 @@ import {
 
 import { authenticate } from '../remote/auth-service';
 import { User } from '../models/user';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 
 interface ILoginProps {
     authUser: User;
@@ -38,17 +38,27 @@ function LoginComponent(props: ILoginProps) {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [errorMessage, setErrorMessage] = useState('Test message');
+    const [errorMessage, setErrorMessage] = useState('');
 
     let updateUsername = (e: any) => {
+        if(!e.currentTarget.value){
+            setErrorMessage('Please enter Username')            
+        }
+
         setUsername(e.currentTarget.value);
     }
 
     let updatePassword = (e: any) => {
-        setPassword(e.currentTarget.value);
-    }
+        if(!e.currentTarget.value){
+            setErrorMessage('Please enter password')
+        }
 
-    let login = async () => {
+        setPassword(e.currentTarget.value);
+    }    
+
+    let login = async (e: SyntheticEvent) => {
+        e.preventDefault();
+
         let authUser = await authenticate(username, password);
         props.setAuthUser(authUser);
     }
@@ -59,7 +69,7 @@ function LoginComponent(props: ILoginProps) {
         <>
             <div className={classes.loginContainer}>
                 <form className={classes.loginForm}>
-                    <Typography align="center" variant="h4">Login into Revaboards!</Typography>
+                    <Typography align="center" variant="h4">Login into ERS!</Typography>
 
                     <FormControl margin="normal" fullWidth>
                         <InputLabel htmlFor="username">Username</InputLabel>
@@ -79,7 +89,19 @@ function LoginComponent(props: ILoginProps) {
                             placeholder="Enter your password"/>
                     </FormControl>
                     <br/><br/>
-                    <Button onClick={login} variant="contained" color="primary" size="medium">Login</Button>
+                        <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: "white"
+                        }}>
+                          <Button onClick={login} variant="contained" color="primary" size="large">Login</Button>
+                          <div style={{ marginLeft: '5rem' }}> </div>
+                          <Link to='/register'>
+                            <Button variant="contained" color="primary" size="large">Sign Up</Button>
+                          </Link>
+                        </div>
                     <br/><br/>
                     {
                         errorMessage 
