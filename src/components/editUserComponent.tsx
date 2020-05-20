@@ -3,152 +3,145 @@ import { Typography, FormControl, InputLabel, Input, makeStyles, Button } from '
 import { User } from '../models/user';
 import {project1Client} from '../remote/project1-client';
 import { Alert } from '@material-ui/lab';
+import { updateUser } from '../remote/user-service';
 
-interface IRegisterProps{
-    newUser: User
-    setNewUser: (user: User) => void;
+interface IUpdateProps{
+    authUser: User,
+    updateUser: User
 }
 
 const useStyles = makeStyles({
-    registerContainer: {
+    updateContainer: {
         display: "flex",
         justifyContent: "center",
         margin: 20,
         marginTop: 40,
         padding: 20
     },
-    registerForm: {
+    updateForm: {
         width: "50%"
     }
 })
 
-function RegisterComponent(props: IRegisterProps){
+function UpdateComponent(props: IUpdateProps){
 
     const classes = useStyles();
 
+    let updateUserRole = props.updateUser.roles
+
+    const[user_id, setId] = useState(props.updateUser.user_id)
+    const[username, setUsername] = useState(props.updateUser.username);
+    const[password, setPassword] = useState(props.updateUser.password);
+    const[firstName, setFirstName] = useState(props.updateUser.firstName);
+    const[lastName, setLastName] = useState(props.updateUser.lastName);
+    const[email, setEmail] = useState(props.updateUser.email);
+    const [role, setRole] = useState(updateUserRole);
     const[errorMessage, setErrorMessage] = useState('');
 
-    let setUsername = (e: any) => {
-
-        if(!e.currentTarget.value){
-            setErrorMessage('Please enter Username');
-        }
-
-        props.newUser.username = e.currentTarget.value;
-
+    let updateUsername = (e: any) => {
+        setUsername(e.currentTarget.value);
     }
 
-    let setPassword = (e: any) => {
-
-        if(!e.currentTarget.value){
-            setErrorMessage('Please enter Password');
-        }
-
-        props.newUser.password = e.currentTarget.value;
-
+    let updatePassword = (e: any) => {
+        setPassword(e.currentTarget.value);
     }
 
-    let setFirstName = (e: any) => {
-
-        if(!e.currentTarget.value){
-            setErrorMessage('Please enter First Name');
-        }
-
-        props.newUser.firstName = e.currentTarget.value;
-
+    let updateFirstName = (e: any) => {
+        setFirstName(e.currentTarget.value);
     }
 
-    let setLastName = (e: any) => {
-
-        if(!e.currentTarget.value){
-            setErrorMessage('Please enter Last Name');
-        }
-
-        props.newUser.lastName = e.currentTarget.value;
-
+    let updateLastName = (e: any) => {
+        setLastName(e.currentTarget.value);
     }
 
-    let setEmail = (e: any) => {
-
-        if(!e.currentTarget.value){
-            setErrorMessage('Please enter Email');
-        }
-
-        props.newUser.email = e.currentTarget.value;
-
+    let updateEmail = (e: any) => {
+        setEmail(e.currentTarget.value);
+    }
+    let updateRole = (e:any) => {
+        setRole(e.currentTarget.value);
     }
 
-    let registerUser = (e:SyntheticEvent) => {
+    let updateUser = (e: SyntheticEvent) => {
 
-        project1Client.post('/users', {
-            id: 0,
-            username: props.newUser.username,
-            password: props.newUser.password,
-            firstName: props.newUser.firstName,
-            lastName: props.newUser.lastName,
-            email: props.newUser.email,
-            roles: 'Employee'
+        project1Client.put('/users', {
+            user_id: user_id,
+            username: username,
+            password: password,
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            roles: role
         });
     }
 
+    //console.log(updateUser);
+    
+
     return (
-
         <>
-
-            <div className = {classes.registerContainer}>
-
-                <form className = {classes.registerForm}>
-
-                    <Typography align="center" variant = "h6" > Register for Expense Reimbursement!</Typography>
-
-                    <FormControl margin = "normal" fullWidth>
-
-                        <InputLabel htmlFor = "username">Username</InputLabel>
-
-                        <Input onChange = {setUsername} id = "username" type = "text" placeholder = "Username"/>
-                                
+            <div className = {classes.updateContainer}>
+                <form className = {classes.updateForm}>
+                <Typography align="left" variant="h4">Update User</Typography>
+                    <FormControl margin="normal" fullWidth>
+                        <InputLabel htmlFor="firstname">First Name</InputLabel>
+                        <Input 
+                            onChange={updateFirstName} 
+                            value={firstName} 
+                            id="firstName" type="text" 
+                            placeholder="firstName" />
                     </FormControl>
-
-                    <FormControl margin = "normal" fullWidth>
-
-                        <InputLabel htmlFor = "password">Password</InputLabel>
-
-                        <Input onChange = {setPassword} id = "password" type = "text" placeholder = "Password"/>
-                                
+                    <FormControl margin="normal" fullWidth>
+                        <InputLabel htmlFor="lastName">Last Name</InputLabel>
+                        <Input 
+                            onChange={updateLastName} 
+                            value={lastName} 
+                            id="lastName" type="text" 
+                            placeholder="lastName" />
                     </FormControl>
-
-                    <FormControl margin = "normal" fullWidth>
-
-                        <InputLabel htmlFor = "firstName">First Name</InputLabel>
-
-                        <Input onChange = {setFirstName} id = "firstname" type = "text" placeholder = "First Name"/>
-                                
+                    <FormControl margin="normal" fullWidth>
+                        <InputLabel htmlFor="username">Username</InputLabel>
+                        <Input 
+                            onChange={updateUsername} 
+                            value={username} 
+                            id="username" type="text" 
+                            placeholder="username" />
                     </FormControl>
-
-                    <FormControl margin = "normal" fullWidth>
-
-                        <InputLabel htmlFor = "lastName">Last Name</InputLabel>
-
-                        <Input onChange = {setLastName} id = "lastname" type = "text" placeholder = "Last Name"/>
-                                
+                    <FormControl margin="normal" fullWidth>
+                        <InputLabel htmlFor="password">Password</InputLabel>
+                        <Input 
+                            onChange={updatePassword}
+                            value={password}
+                            id="password" type="password"
+                            placeholder="password"/>
                     </FormControl>
-
-                    <FormControl margin = "normal" fullWidth>
-
-                        <InputLabel htmlFor = "email">Email</InputLabel>
-
-                        <Input onChange = {setEmail} id = "email" type = "text" placeholder = "Email Adress"/>
-                                
+                    <FormControl margin="normal" fullWidth>
+                        <InputLabel htmlFor="email">Email</InputLabel>
+                        <Input 
+                            onChange={updateEmail} 
+                            value={email} 
+                            id="email" type="text" 
+                            placeholder="email" />
                     </FormControl>
-
-                    <br/> <br/>
-
-                    <Button onClick = {registerUser} variant = "contained" color = "primary" size = "medium">Register</Button>
-
-                    {errorMessage ? <Alert severity = "error">{errorMessage}</Alert>
-                        :
-                        <></>}
-
+                    <p></p>
+                    <span>Role</span>
+                    <FormControl fullWidth>
+                        <InputLabel shrink htmlFor="age-native-label-placeholder"></InputLabel>
+                        <select value={role} onChange={updateRole}>
+                            <option value={'Employee'}>Employee</option>
+                            <option value={'Manager'}>Financial Manager</option>
+                            <option value={'Admin'}>Admin</option>
+                        </select>
+                    </FormControl>
+                    <br/><br/>
+                    <Button onClick={updateUser} variant="contained" color="primary" size="medium">Update User</Button>
+                    <br/><br/>
+                    {
+                        errorMessage 
+                            ? 
+                        <span style={{color:"red"}}>{errorMessage}</span>
+                            :
+                        <></>
+                    }
                 </form>
 
             </div>
@@ -160,4 +153,4 @@ function RegisterComponent(props: IRegisterProps){
 
 }
 
-export default RegisterComponent;
+export default UpdateComponent;
