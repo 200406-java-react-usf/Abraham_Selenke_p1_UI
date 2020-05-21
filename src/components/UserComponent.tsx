@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core';
 import { User } from '../models/user';
-import { getAllUsers } from '../remote/user-service';
+import { getAllUsers, deleteUser } from '../remote/user-service';
 import { Link } from 'react-router-dom';
 
 interface IUserProps {
@@ -34,19 +34,19 @@ const UserComponent = (props: IUserProps) => {
             const response = await getAllUsers();            
             for(let user of response){
                 users.push(
-                    <tr key = {user.id}>
-                        <th scope="row">{user.id}</th>
+                    <tr key = {user.user_id}>
+                        <th scope="row">{user.user_id}</th>
                         <td>{user.firstName}</td>
                         <td>{user.lastName}</td>
                         <td>{user.username}</td>
                         <td>{user.email}</td>
                         <td>{user.roles}</td>
-                        <td><Link to={'/edit'} onClick={ () => {
+                        <td><Link to={'/editUser'} onClick={ () => {
                             props.editUser({...user})}}>edit</Link>
                         </td>
-                        <td><Link to={'/delete'} onClick={ () => {
-                            props.editUser({...user})}}>delete</Link>
-                        </td>
+                        <td><Link to = '/home' onClick = {async () => {
+                            await deleteUser(user.user_id);
+                        }}>Delete</Link></td>
                     </tr>
                 )
             }
