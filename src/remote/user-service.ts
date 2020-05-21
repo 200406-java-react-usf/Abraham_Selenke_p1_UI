@@ -1,5 +1,4 @@
 import { project1Client } from "./project1-client";
-import { User } from "../models/user";
 
 export async function newUser(username: string, password: string, firstName: string, lastName: string, email: string) {
     let response = await project1Client.post('/register', {username, password, firstName, lastName, email});
@@ -20,9 +19,11 @@ export async function updateUser(user_id: number, username: string, password: st
     return await response.data;
 }
 
-export async function deleteUser(userId: number){
-    console.log(userId)
-    
-    let response = await project1Client.delete('/users', {data: {"user_id": userId}});
-    return await response.data;
+export async function deleteUser(user_id: number){
+    let resp = await project1Client.delete('/users',{
+        data:{
+            user_id: user_id
+        }
+    });
+    return await resp.data;
 }
