@@ -10,6 +10,9 @@ import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import RegisterComponent from './components/RegistrationComponent';
 import UserComponent from './components/UserComponent';
 import UpdateComponent from './components/editUserComponent';
+import ReimbursementComponent from './components/ReimbursementComponent';
+import EmployeeComponent from './components/EmployeeComponent';
+import UpdateReimbComponent from './components/editReimbursementComponent';
 
 
 
@@ -19,8 +22,12 @@ function App() {
   const [authUser, setAuthUser] = useState(null as User);
   // @ts-ignore
   const [newUser, setNewUser] = useState(new User(0, '', '', '', '', '', 'Employee'));
-// @ts-ignore
-const [editUser, setEditUser] = useState(null as User);
+  // @ts-ignore
+  const [editUser, setEditUser] = useState(null as User);
+  // @ts-ignore
+  //const [newReimbursement, setNewReimbursement] = useState(new Reimbursement(0, '', '', '', '', '', 'Employee'));
+  // @ts-ignore
+  const [editReimbursement, setEditReimbursement] = useState(null as Reimbursement);
 
   return (
     <>
@@ -39,7 +46,10 @@ const [editUser, setEditUser] = useState(null as User);
           <Route path="/login" render={() => <LoginComponent authUser={authUser} setAuthUser={setAuthUser} /> } />
           <Route path = "/users" render = {() => <UserComponent authUser = {authUser} editUser = {setEditUser}/> } />
           <Route path="/register" render={() => <RegisterComponent newUser={newUser} setNewUser = {setNewUser} /> } />
-          <Route path="/edit" render={() => <UpdateComponent authUser={authUser} updateUser = {editUser} /> } />
+          <Route path="/editUser" render={() => <UpdateComponent authUser={authUser} updateUser = {editUser} /> } />
+          <Route path="/editReimbursement" render={() => <UpdateReimbComponent authUser={authUser} updateReimbursement = {editReimbursement} /> } />
+          <Route path = "/fmana-reimbursement" render = {() => <ReimbursementComponent authUser = {authUser} editReimbursement = {setEditReimbursement}/> } />
+          <Route path = "/user-reimbursement" render = {() => <EmployeeComponent authUser = {authUser} editReimbursement = {setEditReimbursement}/> } />
         </Switch>
         
       </Router>
