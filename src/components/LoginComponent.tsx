@@ -44,7 +44,6 @@ function LoginComponent(props: ILoginProps) {
         if(!e.currentTarget.value){
             setErrorMessage('Please enter Username')            
         }
-
         setUsername(e.currentTarget.value);
     }
 
@@ -52,15 +51,16 @@ function LoginComponent(props: ILoginProps) {
         if(!e.currentTarget.value){
             setErrorMessage('Please enter password')
         }
-
         setPassword(e.currentTarget.value);
     }    
 
     let login = async (e: SyntheticEvent) => {
         e.preventDefault();
-
         let authUser = await authenticate(username, password);
         props.setAuthUser(authUser);
+        if(authUser){
+            setErrorMessage('Invalid username or password')
+        }
     }
 
     return (
