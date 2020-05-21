@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Button } from '@material-ui/core';
 import { User } from '../models/user';
 import { getAllUsers, deleteUser } from '../remote/user-service';
 import { Link } from 'react-router-dom';
@@ -41,19 +41,19 @@ const UserComponent = (props: IUserProps) => {
                         <td>{user.username}</td>
                         <td>{user.email}</td>
                         <td>{user.roles}</td>
-                        <td><Link to={'/editUser'} onClick={ () => {
-                            props.editUser({...user})}}>edit</Link>
+                        <td><Button component={Link} to="/editUser" onClick={ () => {
+                            props.editUser({...user})}} variant="contained" color="secondary" size="medium">Edit User</Button>
                         </td>
-                        <td><Link to = '/home' onClick = {async () => {
-                            await deleteUser(user.user_id);
-                        }}>Delete</Link></td>
+                        <td><Button component={Link} to="/users" onClick={async () => {
+                            await deleteUser(user.user_id)}} variant="contained" color="secondary" size="medium">Delete User</Button>
+                        </td>
                     </tr>
                 )
             }
             setUsersState(users);
         }
         fetchData();
-    },[]);
+    },[users]);
 
 
     return (
