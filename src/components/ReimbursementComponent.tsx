@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles, InputLabel } from '@material-ui/core';
+import { makeStyles, InputLabel, Button } from '@material-ui/core';
 import { User } from '../models/user';
 import { getAllReimbursements, deleteReimbursement, getReimbursementById } from '../remote/reimbursement-service';
 import { Reimbursements } from '../models/reimbursement';
+import { Link } from 'react-router-dom';
 
 interface IReimbursementProps {
     authUser: User;
@@ -46,16 +47,18 @@ const ReimbursementComponent = (props: IReimbursementProps) => {
             const response = await getAllReimbursements();
             
             for(let reimbursement of response){
-                if((reimbursement.status == reimbStatus || reimbStatus == 'All') && (reimbursement.type == reimbType || reimbType == 'All')){
+                if((reimbursement.reimb_status == reimbStatus || reimbStatus == 'All') && (reimbursement.reimb_type == reimbType || reimbType == 'All')){
                     reimbursements.push(
-                        <tr key={reimbursement.reimbId}>              
-                            <td>{reimbursement.reimbId}</td>
+                        <tr key={reimbursement.reimb_id}>              
+                            <td>{reimbursement.reimb_id}</td>
                             <td>{reimbursement.amount}</td>
                             <td>{reimbursement.description}</td>
-                            <td>{reimbursement.authorId}</td>
-                            <td>{reimbursement.submitted}</td>
-                            <td>{reimbursement.status}</td>
-                            <td>{reimbursement.type}</td>
+                            <td>{reimbursement.reimb_status}</td>
+                            <td>{reimbursement.reimb_type}</td>
+                            <td><Button component={Link} to={`/reimbursement/${reimbursement.reimb_id}`} onClick={
+                                async () => { props.editReimbursement(await getReimbursementById(reimbursement.reimb_id));}}
+                                variant="contained" color="secondary" size="medium">Details</Button>
+                            </td>
                     </tr>
                     )
                 }
@@ -64,7 +67,7 @@ const ReimbursementComponent = (props: IReimbursementProps) => {
         }
         fetchData();
     }, [reimbStatus, reimbType, reimbursements]);
-
+    
     return (
         !props.authUser || (props.authUser.roles !== 'Manager') ?
         <>
@@ -85,8 +88,6 @@ const ReimbursementComponent = (props: IReimbursementProps) => {
                     <th scope="col">Id</th>
                     <th scope="col">Amount</th>
                     <th scope="col">Description</th>
-                    <th scope="col">Author Id</th>
-                    <th scope="col">Submitted Time</th>
                     <th scope="col"><InputLabel shrink htmlFor="age-native-label-placeholder"></InputLabel>
                         <select value={reimbStatus} onChange={updateStatus}>
                             <option value={'All'}>All Status</option>
@@ -102,7 +103,7 @@ const ReimbursementComponent = (props: IReimbursementProps) => {
                             <option value={'Food'}>Food</option>
                             <option value={'Other'}>Other</option>
                     </select></th>
-
+                    <th scope="col">More Information</th>
                     </tr>
                         </thead>
                         <tbody>
