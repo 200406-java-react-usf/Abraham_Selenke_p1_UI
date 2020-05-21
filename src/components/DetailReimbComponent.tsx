@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import { User } from '../models/user';
-import { getAllReimbursements, deleteReimbursement, getReimbursementById } from '../remote/reimbursement-service';
-import { Link } from 'react-router-dom';
+import { updateReimbursement } from '../remote/reimbursement-service';
 import { Reimbursements } from '../models/reimbursement';
+import { UserReimbursements } from '../models/author-reimb';
 
 interface IReimbursementProps {
     authUser: User;
-    editReimbursement: (reimbursement: Reimbursements) => void;
+    statusManagerReimbursement: Reimbursements;
+    statusUserReimbursement: UserReimbursements;
 }   
 
 const useStyles = makeStyles({
@@ -23,124 +24,101 @@ const useStyles = makeStyles({
     },
 });
 
-
-const ReimbursementComponent = (props: IReimbursementProps) => {
+const StatusUpdateReimbursementComponent = (props: IReimbursementProps) => {
     
     const classes = useStyles();
+   console.log('hello');
+   console.log(props.statusUserReimbursement);
+   
+   
+    // let updateStatusApprovel = async () => {
+    //     let updateManager = {...props.statusManagerReimbursement}
+    //     let updateUser = {...props.statusUserReimbursement}
+        
+    //     updateManager.resolver_id = props.authUser.user_id;
+    //     //@ts-ignore
+    //     updateManager.resolved = Date.now();
+    //     updateManager.reimb_status = 'Approved';
 
-    const [reimbursementsState, setReimbursementsState] = useState([] as Reimbursements[]);
-    const [reimbStatus, setReimbStatus] = useState(0);
-    const [reimbType, setReimbType] = useState(0);
+    //     let updatedManagerReimb = await updateReimbursement(
+    //             updateManager.reimb_id, updateManager.amount,
+    //             updateManager.description, updateManager.author,
+    //             updateManager.reimb_status, updateManager.reimb_type);
 
-    let updateStatus = (e: any) => {
-        setReimbStatus(e.currentTarget.value);
-    }
+    //     updateUser.resolver_id = props.authUser.user_id;
+    //     //@ts-ignore
+    //     updateUser.resolved = Date.now();
+    //     updateManager.reimb_status = 'Approved';
 
-    let updateType = (e: any) => {
-        setReimbType(e.currentTarget.value);
-    }
+    //     let updatedUserReimb = await updateReimbursement(
+    //             updateUser.reimb_id, updateUser.amount,
+    //             updateUser.description, updateManager.author,
+    //             updateUser.reimb_status, updateUser.reimb_type);
 
-    let reimbursements: any[] = [];
+    //     console.log(updatedManagerReimb);
+    //     console.log(updatedUserReimb);        
+    // }
 
-    useEffect(() => {
-        let fetchData = async () => {
-            const response = await getAllReimbursements();
-            for(let reimbursement of response){
-                if((reimbursement.status == reimbStatus || reimbStatus == 0) && (reimbursement.type == reimbType || reimbType == 0)){
-                    reimbursements.push(
-                        <tr>
-                            <td>{reimbursement.amount}</td>
-                            <td>{reimbursement.description}</td>
-                            <td>{reimbursement.authorId}</td>
-                            <td>{reimbursement.resolverId}</td>
-                            {
-                                reimbursement.status === 'Pending' ?
-                                    <td>Pending</td>
-                                :
-                                reimbursement.status === 'Denied' ?
-                                    <td>Denied</td>
-                                :
-                                reimbursement.status === 'Approved' ?
-                                    <td>Approved</td>
-                                :
-                                    <td>Unknown</td>
-                            }
-                            {
-                                reimbursement.type === 'Lodging' ?
-                                    <td>Lodging</td>
-                                :
-                                reimbursement.type === 'Travel' ?
-                                    <td>Travel</td>
-                                :
-                                reimbursement.type === 'Food' ?
-                                    <td>Food</td>
-                                :
-                                    <td>Other</td>
-                            }
-                            <td><Link to = {`/reimbursmentdetails-${reimbursement.reimb_id}`} onClick = {
-                                async () => {
-                                    const response = await getReimbursementById(reimbursement.reimb_id);
-                                    props.editReimbursement(response);
-                                }
-                            }>Details</Link></td>
-                        </tr>
-                    )
-                }
-            }
-            setReimbursementsState(reimbursements)
-        }
-        fetchData();
-    }, [reimbStatus, reimbType]);
+    // let updateStatusDen = async () => {
+    //     let updateManager = {...props.statusManagerReimbursement}
+    //     let updateUser = {...props.statusUserReimbursement}
+        
+    //     updateManager.resolver_id = props.authUser.user_id;
+    //     //@ts-ignore
+    //     updateManager.resolved = Date.now();
+    //     updateManager.reimb_status = 'Denied';
 
-    // useEffect(() => {
-    //     let fetchData = async () => {
-    //         const response = await getAllReimbursements();            
-    //         for(let reimbursement of response){
-    //             reimbursements.push(
-    //                 <tr key = {reimbursement.reimbId}>
-    //                     <th scope="row">{reimbursement.reimbId}</th>
-    //                     <td>{reimbursement.amount}</td>
-    //                     <td>{reimbursement.submitted}</td>
-    //                     <td>{reimbursement.resolved}</td>
-    //                     <td>{reimbursement.description}</td>
-    //                     <td>{reimbursement.authorId}</td>
-    //                     <td>{reimbursement.resolver}</td>
-    //                     <td>{reimbursement.status}</td>
-    //                         <select value = {reimbStatus} onChange = {updateStatus}>
-    //                             <option value = {0}>All</option>
-    //                             <option value = {1}>Pending</option>
-    //                             <option value = {2}>Denied</option>
-    //                             <option value = {3}>Approved</option>
-    //                         </select>
-    //                     <td>{reimbursement.type}</td>
-    //                         <select value = {reimbType} onChange = {updateType}>
-    //                             <option value = {0}>All</option>
-    //                             <option value = {1}>Lodging</option>
-    //                             <option value = {2}>Travel</option>
-    //                             <option value = {3}>Food</option>
-    //                             <option value = {4}>Other</option>
-    //                         </select>
-    //                     <td><Link to={'/editReimbursement'} onClick={ () => {
-    //                         props.editReimbursement({...reimbursement})}}>edit</Link>
-    //                     </td>
-    //                     <td><Link to = '/reimbursements' onClick = {async () => {
-    //                         await deleteReimbursement(reimbursement.reimbId);
-    //                     }}>Delete</Link></td>
-    //                 </tr>
-    //             )
-    //         }
-    //         setReimbursementsState(reimbursements);
-    //     }
-    //     fetchData();
-    // },[]);
+    //     let updatedManagerReimb = await updateReimbursement(
+    //             updateManager.reimb_id, updateManager.amount,
+    //             updateManager.description, updateManager.author,
+    //             updateManager.reimb_status, updateManager.reimb_type);
 
+    //     updateUser.resolver_id = props.authUser.user_id;
+    //     //@ts-ignore
+    //     updateUser.resolved = Date.now();
+    //     updateManager.reimb_status = 'Denied';
+
+    //     let updatedUserReimb = await updateReimbursement(
+    //             updateUser.reimb_id, updateUser.amount,
+    //             updateUser.description, updateManager.author,
+    //             updateUser.reimb_status, updateUser.reimb_type);
+
+    //     console.log(updatedManagerReimb);
+    //     console.log(updatedUserReimb);         
+    // }
 
     return (
-        !props.authUser || (props.authUser.roles !== 'Manager') ?
+        (props.authUser.roles !== 'Admin')
+        ?
         <>
             <div className={classes.reimbursementContainer}>
                 <form className={classes.reimbursementForm}>
-                    <h1>Youre not authorized to view this page</h1>
+                    <h1 >Reimbursement Information: Manager</h1>
+                    <table className="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="row">Id</th>
+                                <th scope="row">Amount</th>
+                                <th scope="row">Submitted Time</th>
+                                <th scope="row">Description</th>
+                                <th scope="row">Author Id</th>
+                                <th scope="row">Resolved Time</th>
+                                <th scope="row">Resolver Id</th>
+                                <th scope="row">Status</th>
+                                <th scope="row">Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {/* <tr key={updatedManagerReimb.reimb_id}>              
+                                <td>{updatedManagerReimb.reimb_id}</td>
+                                <td>{updatedManagerReimb.amount}</td>
+                                <td>{updatedManagerReimb.description}</td>
+                                <td>{updatedManagerReimb.reimb_status}</td>
+                                <td>{updatedManagerReimb.reimb_type}</td>
+                                
+                            </tr> */}
+                        </tbody>
+                    </table>
                 </form>
             </div>
         </>
@@ -148,7 +126,7 @@ const ReimbursementComponent = (props: IReimbursementProps) => {
         <>
             <div className={classes.reimbursementContainer}>
                 <form className={classes.reimbursementForm}>
-                    <h1 >Reimbursement Information</h1>
+                    <h1 >Reimbursement Information: Employee</h1>
                     <table className="table table-hover">
                         <thead>
                             <tr>
@@ -166,14 +144,23 @@ const ReimbursementComponent = (props: IReimbursementProps) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {reimbursementsState}
+                            {/* {reimbursementsState} */}
                         </tbody>
                     </table>
                 </form>
             </div>
         </>
+        //!props.authUser || (props.authUser.roles !== 'Admin') 
+        //:
+        // <>
+        //     <div className={classes.reimbursementContainer}>
+        //         <form className={classes.reimbursementForm}>
+        //             <h1>Youre not authorized to view this page</h1>
+        //         </form>
+        //     </div>
+        // </>
     );
 
 }
 
-export default ReimbursementComponent;
+export default StatusUpdateReimbursementComponent;
