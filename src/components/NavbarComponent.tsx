@@ -49,6 +49,7 @@ const NavbarComponent = (props: INavbarProps) => {
                                 <span>  </span>
                                 <Link to="/users" className={classes.link}>Users</Link>
                                 <span>  </span>
+                                <Link to="/new-user" className={classes.link}>New User</Link>
                                 <span>  </span>
                                 <a className={classes.link} onClick={logoutUser}>Logout</a>
                             </Typography>
@@ -77,6 +78,7 @@ const NavbarComponent = (props: INavbarProps) => {
                                 <span>  </span>
                                 <Link to="/user-reimbursement" className={classes.link}>Reimbursements</Link>
                                 <span>  </span>
+                                <Link to="/new-reimbursement" className={classes.link}>New Reimbursement</Link>
                                 <span>  </span>
                                 <a className={classes.link} onClick={logoutUser}>Logout</a>
                             </Typography>
