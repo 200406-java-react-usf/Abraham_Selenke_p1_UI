@@ -6,7 +6,11 @@ export async function newReimbursement(amount: number, description: string, auth
 }
 
 export async function getReimbursementById(id: number){
-    let resp = await project1Client.get(`/reimbursment/id/${id}`);
+    console.log(id);
+    
+    let resp = await project1Client.get(`/reimbursement/${id}`);
+    console.log(resp);
+    
     return resp.data;
 }
 
@@ -31,4 +35,11 @@ export async function deleteReimbursement(reimbId : number){
         }
     });
     return await resp.data;
+}
+
+export async function getByAuthor(id: number){
+    let response = await project1Client.get(`/reimbursement/employee/${id}`);
+    
+    return await response.data;
+
 }
