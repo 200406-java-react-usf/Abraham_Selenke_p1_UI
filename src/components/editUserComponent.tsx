@@ -2,8 +2,6 @@ import React, { SyntheticEvent, useState } from 'react';
 import { Typography, FormControl, InputLabel, Input, makeStyles, Button } from '@material-ui/core';
 import { User } from '../models/user';
 import {project1Client} from '../remote/project1-client';
-import { Alert } from '@material-ui/lab';
-import { updateUser } from '../remote/user-service';
 
 interface IUpdateProps{
     authUser: User,
@@ -39,22 +37,37 @@ function UpdateComponent(props: IUpdateProps){
     const[errorMessage, setErrorMessage] = useState('');
 
     let updateUsername = (e: any) => {
+        if(!e.currentTarget.value){
+            setErrorMessage('Please enter username')
+        }
         setUsername(e.currentTarget.value);
     }
 
     let updatePassword = (e: any) => {
+        if(!e.currentTarget.value){
+            setErrorMessage('Please enter password')
+        }
         setPassword(e.currentTarget.value);
     }
 
     let updateFirstName = (e: any) => {
+        if(!e.currentTarget.value){
+            setErrorMessage('Please enter First Name')
+        }
         setFirstName(e.currentTarget.value);
     }
 
     let updateLastName = (e: any) => {
+        if(!e.currentTarget.value){
+            setErrorMessage('Please enter Last Name')
+        }
         setLastName(e.currentTarget.value);
     }
 
     let updateEmail = (e: any) => {
+        if(!e.currentTarget.value){
+            setErrorMessage('Please enter email')
+        }
         setEmail(e.currentTarget.value);
     }
     let updateRole = (e:any) => {
@@ -73,9 +86,6 @@ function UpdateComponent(props: IUpdateProps){
             roles: role
         });
     }
-
-    //console.log(updateUser);
-    
 
     return (
         <>
