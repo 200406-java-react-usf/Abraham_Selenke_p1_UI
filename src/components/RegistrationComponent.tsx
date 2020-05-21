@@ -113,7 +113,7 @@ function RegisterComponent(props: IRegisterProps){
 
                         <InputLabel htmlFor = "password">Password</InputLabel>
 
-                        <Input onChange = {setPassword} id = "password" type = "text" placeholder = "Password"/>
+                        <Input onChange = {setPassword} id = "password" type = "password" placeholder = "Password"/>
                                 
                     </FormControl>
 
