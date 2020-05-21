@@ -2,6 +2,7 @@ import React, { SyntheticEvent, useState } from 'react';
 import { Typography, FormControl, InputLabel, Input, makeStyles, Button } from '@material-ui/core';
 import { User } from '../models/user';
 import {project1Client} from '../remote/project1-client';
+import { Link } from 'react-router-dom';
 
 interface IUpdateProps{
     authUser: User,
@@ -33,9 +34,9 @@ function UpdateComponent(props: IUpdateProps){
     const[firstName, setFirstName] = useState(props.updateUser.firstName);
     const[lastName, setLastName] = useState(props.updateUser.lastName);
     const[email, setEmail] = useState(props.updateUser.email);
-    const [role, setRole] = useState(updateUserRole);
+    const[role, setRole] = useState(updateUserRole);
     const[errorMessage, setErrorMessage] = useState('');
-
+    
     let updateUsername = (e: any) => {
         if(!e.currentTarget.value){
             setErrorMessage('Please enter username')
@@ -143,7 +144,15 @@ function UpdateComponent(props: IUpdateProps){
                         </select>
                     </FormControl>
                     <br/><br/>
-                    <Button onClick={updateUser} variant="contained" color="primary" size="medium">Update User</Button>
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: "white",
+                        }}>
+                    <Button component={Link} to="/users" onClick={updateUser} variant="contained" color="secondary" size="medium">Update User</Button>
+                    </div>
                     <br/><br/>
                     {
                         errorMessage 
