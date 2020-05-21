@@ -3,10 +3,12 @@ import { Typography, FormControl, InputLabel, Input, makeStyles, Button } from '
 import { User } from '../models/user';
 import {project1Client} from '../remote/project1-client';
 import { Reimbursements } from '../models/reimbursement';
+import { Link } from 'react-router-dom';
+import { UserReimbursements } from '../models/author-reimb';
 
 interface IUpdateProps{
     authUser: User,
-    updateReimbursement: Reimbursements
+    updateReimbursement: UserReimbursements
 }
 
 const useStyles = makeStyles({
@@ -25,11 +27,11 @@ const useStyles = makeStyles({
 function UpdateReimbComponent(props: IUpdateProps){
 
     const classes = useStyles();
-
-    const[reimbId, setId] = useState(props.updateReimbursement.reimbId)
+    
+    const[reimb_id, setId] = useState(props.updateReimbursement.reimb_id);
     const[amount, setAmount] = useState(props.updateReimbursement.amount);
     const[description, setDescription] = useState(props.updateReimbursement.description);
-    const[type, setType] = useState(props.updateReimbursement.type);
+    const[type, setType] = useState(props.updateReimbursement.reimb_type);
     const[errorMessage, setErrorMessage] = useState('');
 
     let updateAmount = (e: any) => {
@@ -49,14 +51,13 @@ function UpdateReimbComponent(props: IUpdateProps){
     let updateType = (e: any) => {
         setType(e.currentTarget.value);
     }
-
+    
     let updateReimbursement = (e: SyntheticEvent) => {
-
         project1Client.put('/reimbursement', {
-            reimbId: reimbId,
+            reimb_id: reimb_id,
             amount: amount,
             description: description,
-            type: type
+            reimb_type: type
         });
     }
 
@@ -73,7 +74,14 @@ function UpdateReimbComponent(props: IUpdateProps){
                             id="amount" type="text" 
                             placeholder="amount" />
                     </FormControl>
-                    
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="firstname">Description</InputLabel>
+                            <Input 
+                                onChange={updateDescription} 
+                                value={description} 
+                                id="description" type="text" 
+                                placeholder="description" />
+                    </FormControl>
                     <p></p>
                     <span>Type of Reimbursement</span>
                     <FormControl fullWidth>
@@ -86,7 +94,7 @@ function UpdateReimbComponent(props: IUpdateProps){
                         </select>
                     </FormControl>
                     <br/><br/>
-                    <Button onClick={updateReimbursement} variant="contained" color="primary" size="medium">Update Reimbursement</Button>
+                    <Button component={Link} to="/user-reimbursement" onClick={updateReimbursement} variant="contained" color="primary" size="medium">Update Reimbursement</Button>
                     <br/><br/>
                     {
                         errorMessage 
