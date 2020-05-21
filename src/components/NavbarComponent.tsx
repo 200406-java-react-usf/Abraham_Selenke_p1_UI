@@ -27,7 +27,7 @@ const useStyles = makeStyles({
 const NavbarComponent = (props: INavbarProps) => {
 
     let logoutUser = async () => {
-        let authUser = await logout();
+        await logout();
         //@ts-ignore
         props.setAuthUser(null as User);
     }
@@ -61,7 +61,7 @@ const NavbarComponent = (props: INavbarProps) => {
                                 <Link to="/home" className={classes.link}>Home</Link>
                                 <span>  </span>
                                 <span>  </span>
-                                <Link to="/reimbursement" className={classes.link}>Reimbursements</Link>
+                                <Link to="/fmana-reimbursement" className={classes.link}>Reimbursements</Link>
                                 <span>  </span>
                                 <span>  </span>
                                 <a className={classes.link} onClick={logoutUser}>Logout</a>
@@ -75,7 +75,7 @@ const NavbarComponent = (props: INavbarProps) => {
                                 <Link to="/home" className={classes.link}>Home</Link>
                                 <span>  </span>
                                 <span>  </span>
-                                <Link to="/reimbursement" className={classes.link}>Reimbursements</Link>
+                                <Link to="/user-reimbursement" className={classes.link}>Reimbursements</Link>
                                 <span>  </span>
                                 <span>  </span>
                                 <a className={classes.link} onClick={logoutUser}>Logout</a>
