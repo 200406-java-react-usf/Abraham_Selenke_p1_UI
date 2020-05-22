@@ -1,12 +1,13 @@
 import React, { SyntheticEvent, useState } from 'react';
 import { Typography, FormControl, InputLabel, Input, makeStyles, Button } from '@material-ui/core';
 import { User } from '../models/user';
-import {project1Client} from '../remote/project1-client';
+import { addNewUser } from '../remote/user-service';
 import { Alert } from '@material-ui/lab';
+import { Link } from 'react-router-dom';
 
-interface IRegisterProps{
-    newUser: User
-    setNewUser: (user: User) => void;
+interface INewUserProps{
+    authUser: User,
+    setNewUser: (user: User) => void 
 }
 
 const useStyles = makeStyles({
@@ -22,142 +23,104 @@ const useStyles = makeStyles({
     }
 })
 
-function RegisterComponent(props: IRegisterProps){
+function NewUserComponent(props: INewUserProps){
 
     const classes = useStyles();
-
+    const [newUser, setNewUser] = useState(new User(0, '', '', '', '', '', ''))
     const[errorMessage, setErrorMessage] = useState('');
 
     let setUsername = (e: any) => {
-
         if(!e.currentTarget.value){
             setErrorMessage('Please enter Username');
         }
-
-        props.newUser.username = e.currentTarget.value;
-
+        newUser.username = e.currentTarget.value;
     }
-
     let setPassword = (e: any) => {
-
         if(!e.currentTarget.value){
             setErrorMessage('Please enter Password');
         }
-
-        props.newUser.password = e.currentTarget.value;
-
+        newUser.password = e.currentTarget.value;
     }
-
     let setFirstName = (e: any) => {
-
         if(!e.currentTarget.value){
             setErrorMessage('Please enter First Name');
         }
-
-        props.newUser.firstName = e.currentTarget.value;
-
+        newUser.firstName = e.currentTarget.value;
     }
-
     let setLastName = (e: any) => {
-
         if(!e.currentTarget.value){
             setErrorMessage('Please enter Last Name');
         }
-
-        props.newUser.lastName = e.currentTarget.value;
-
+        newUser.lastName = e.currentTarget.value;
     }
-
     let setEmail = (e: any) => {
-
         if(!e.currentTarget.value){
             setErrorMessage('Please enter Email');
         }
-
-        props.newUser.email = e.currentTarget.value;
-
+        newUser.email = e.currentTarget.value;
     }
-
-    let registerUser = (e:SyntheticEvent) => {
-
-        project1Client.post('/users', {
-            id: 0,
-            username: props.newUser.username,
-            password: props.newUser.password,
-            firstName: props.newUser.firstName,
-            lastName: props.newUser.lastName,
-            email: props.newUser.email,
-            roles: 'Employee'
-        });
+    let setRole = (e: any) => {
+        newUser.roles = e.currentTarget.value;
+    }
+    let addUser = async () => {        
+        let respones = await addNewUser(newUser.username, newUser.password, newUser.firstName, newUser.lastName, newUser.email);
+        props.setNewUser(respones);
+        console.log(respones);
     }
 
     return (
 
         <>
-
             <div className = {classes.registerContainer}>
-
                 <form className = {classes.registerForm}>
-
-                    <Typography align="center" variant = "h6" > Register for Expense Reimbursement!</Typography>
-
+                    <Typography align="center" variant = "h6" > Add New User for Expense Reimbursement!</Typography>
                     <FormControl margin = "normal" fullWidth>
-
                         <InputLabel htmlFor = "username">Username</InputLabel>
-
                         <Input onChange = {setUsername} id = "username" type = "text" placeholder = "Username"/>
-                                
                     </FormControl>
-
                     <FormControl margin = "normal" fullWidth>
-
                         <InputLabel htmlFor = "password">Password</InputLabel>
-
-                        <Input onChange = {setPassword} id = "password" type = "password" placeholder = "Password"/>
-                                
+                        <Input onChange = {setPassword} id = "password" type = "text" placeholder = "Password"/>
                     </FormControl>
-
                     <FormControl margin = "normal" fullWidth>
-
                         <InputLabel htmlFor = "firstName">First Name</InputLabel>
-
                         <Input onChange = {setFirstName} id = "firstname" type = "text" placeholder = "First Name"/>
-                                
                     </FormControl>
-
                     <FormControl margin = "normal" fullWidth>
-
                         <InputLabel htmlFor = "lastName">Last Name</InputLabel>
-
                         <Input onChange = {setLastName} id = "lastname" type = "text" placeholder = "Last Name"/>
-                                
                     </FormControl>
-
                     <FormControl margin = "normal" fullWidth>
-
                         <InputLabel htmlFor = "email">Email</InputLabel>
-
                         <Input onChange = {setEmail} id = "email" type = "text" placeholder = "Email Adress"/>
-                                
                     </FormControl>
-
+                    <span>Role</span>
+                    <FormControl fullWidth>
+                        <InputLabel shrink htmlFor="age-native-label-placeholder"></InputLabel>
+                        <select onChange={setRole}>
+                            <option aria-label="None" value="" />
+                            <option value={'Employee'}>Employee</option>
+                            <option value={'Manager'}>Financial Manager</option>
+                            <option value={'Admin'}>Admin</option>
+                        </select>
+                    </FormControl>
                     <br/> <br/>
-
-                    <Button onClick = {registerUser} variant = "contained" color = "primary" size = "medium">Register</Button>
-
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: "white",
+                        }}>
+                    <Button component={Link} to="/home" onClick = {addUser} variant = "contained" color = "secondary" size = "medium">Add New User</Button>
+                    </div>
                     {errorMessage ? <Alert severity = "error">{errorMessage}</Alert>
                         :
                         <></>}
-
                 </form>
-
             </div>
-
-
         </>
-
     )
-
 }
 
-export default RegisterComponent;
+export default NewUserComponent;

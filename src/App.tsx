@@ -5,10 +5,20 @@ import LoginComponent from './components/LoginComponent';
 import AdminHomeComponent from './components/AdminHomeComponent';
 
 import { User } from './models/user';
+import { Reimbursements } from './models/reimbursement';
 import NavbarComponent from './components/NavbarComponent';
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import RegisterComponent from './components/RegistrationComponent';
-import UserComponent from './components/UserComponent';
+import ViewUserComponent from './components/UserComponent';
+import EditUserComponent from './components/EditUserComponent';
+import ViewReimbursementComponent from './components/ReimbursementComponent';
+import ViewReimbEmployeeComponent from './components/EmployeeComponent';
+
+import EditReimbComponent from './components/EditReimbursementComponent';
+import AddUserComponent from './components/AddUserComponent';
+import AddReimbursementComponent from './components/AddReimbursementComponent';
+import StatusUpdateReimbursementComponent from './components/DetailReimbComponent';
+
 
 
 function App() {
@@ -17,8 +27,12 @@ function App() {
   const [authUser, setAuthUser] = useState(null as User);
   // @ts-ignore
   const [newUser, setNewUser] = useState(new User(0, '', '', '', '', '', 'Employee'));
-// @ts-ignore
-const [editUser, setEditUser] = useState(new User(0, '', '', '', '', '', 'Employee'));
+  // @ts-ignore
+  const [newThis, setThisUser] = useState(null as User);
+  // @ts-ignore
+  const [newReimbursement, setNewReimbursement] = useState(new Reimbursements(0, 0, Date, Date, '', 0, 0, '', ''));
+  // @ts-ignore
+  const [thisReimbursement, setThisReimbursement] = useState(new Reimbursements(0, 0, Date, Date, '', 0, 0, '', ''));
 
   return (
     <>
@@ -35,8 +49,20 @@ const [editUser, setEditUser] = useState(new User(0, '', '', '', '', '', 'Employ
         <Switch>
           <Route path="/home" render={() => <AdminHomeComponent username={authUser?.username} /> } />
           <Route path="/login" render={() => <LoginComponent authUser={authUser} setAuthUser={setAuthUser} /> } />
-          <Route path = "/users" render = {() => <UserComponent authUser = {authUser} editUser = {setEditUser}/> } />
-          <Route path="/register" render={() => <RegisterComponent newUser={newUser} setNewUser = {setNewUser} /> } />
+
+          <Route path="/new-user" render={() => <AddUserComponent authUser={authUser} setNewUser={setNewUser}/> } />
+          <Route path="/editUser" render={() => <EditUserComponent authUser={authUser} newUser = {newUser} setNewUser = {setNewUser} /> } />
+          <Route path ="/users" render = {() => <ViewUserComponent authUser = {authUser} setThisUser = {setThisUser}/> } />
+
+          <Route path="/new-reimbursement" render={() => <AddReimbursementComponent authUser={authUser} setNewReimbursement={setNewReimbursement}/> } />
+          <Route path="/editReimbursement" render={() => <EditReimbComponent authUser={authUser} newReimbursement = {newReimbursement} setNewReimbursement = {setNewReimbursement} /> } />
+          <Route path = "/fmana-reimbursement" render = {() => <ViewReimbursementComponent authUser = {authUser} thisReimbursement = {thisReimbursement} setThisReimbursement = {setThisReimbursement} /> } />
+          <Route path = "/user-reimbursement" render = {() => <ViewReimbEmployeeComponent authUser = {authUser} thisReimbursement = {thisReimbursement} setThisReimbursement = {setThisReimbursement} setNewReimbursement = {setNewReimbursement}/> } />
+
+          <Route path = {`/reimbursement/${thisReimbursement.reimb_id}`} render = {() => <StatusUpdateReimbursementComponent authUser = {authUser} thisReimbursement = {thisReimbursement} setThisReimbursement = {setThisReimbursement} /> } />
+
+          {/* <Route path="/register" render={() => <RegisterComponent newUser={newUser} setNewUser = {setNewUser} /> } /> */}
+
         </Switch>
         
       </Router>
