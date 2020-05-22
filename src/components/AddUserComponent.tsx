@@ -80,7 +80,7 @@ function NewUserComponent(props: INewUserProps){
                     </FormControl>
                     <FormControl margin = "normal" fullWidth>
                         <InputLabel htmlFor = "password">Password</InputLabel>
-                        <Input onChange = {setPassword} id = "password" type = "text" placeholder = "Password"/>
+                        <Input onChange = {setPassword} id = "password" type = "password" placeholder = "Password"/>
                     </FormControl>
                     <FormControl margin = "normal" fullWidth>
                         <InputLabel htmlFor = "firstName">First Name</InputLabel>
