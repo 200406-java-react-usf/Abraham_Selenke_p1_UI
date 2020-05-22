@@ -1,16 +1,12 @@
 import { project1Client } from "./project1-client";
 
-export async function newReimbursement(amount: number, description: string, author_id :number, reimb_status: string, reimb_type: string) {
+export async function addNewReimbursement(amount: number, description: string, author_id :number, reimb_status: string, reimb_type: string) {
     let response = await project1Client.post('/reimbursement', {amount, description, author_id, reimb_status, reimb_type});
     return await response.data;
 }
 
-export async function getReimbursementById(id: number){
-    console.log(id);
-    
+export async function getReimbursementById(id: number){  
     let resp = await project1Client.get(`/reimbursement/${id}`);
-    console.log(resp);
-    
     return resp.data;
 }
 
@@ -21,10 +17,8 @@ export async function getAllReimbursements(){
     return await resp.data;
 }
 
-export async function updateReimbursement(reimbId: number, amount: number, description: string, author_id :number, reimb_status: string, reimb_type: string){
-    let response = await project1Client.put('/reimbursement', {reimbId, amount, description, author_id, reimb_status, reimb_type});
-    console.log(response);
-    
+export async function newUpdateReimbursement(reimb_id: number, amount: number, description: string, resolver_id :number, reimb_status: string, reimb_type: string){
+    let response = await project1Client.put('/reimbursement', {reimb_id, amount, description, resolver_id, reimb_status, reimb_type});    
     return await response.data;
 }
 
@@ -38,8 +32,6 @@ export async function deleteReimbursement(reimbId : number){
 }
 
 export async function getByAuthor(id: number){
-    let response = await project1Client.get(`/reimbursement/employee/${id}`);
-    
+    let response = await project1Client.get(`/reimbursement/employee/${id}`);   
     return await response.data;
-
 }

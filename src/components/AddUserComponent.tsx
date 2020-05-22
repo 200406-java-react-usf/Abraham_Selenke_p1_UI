@@ -1,12 +1,13 @@
 import React, { SyntheticEvent, useState } from 'react';
 import { Typography, FormControl, InputLabel, Input, makeStyles, Button } from '@material-ui/core';
 import { User } from '../models/user';
-import {project1Client} from '../remote/project1-client';
+import { addNewUser } from '../remote/user-service';
 import { Alert } from '@material-ui/lab';
 import { Link } from 'react-router-dom';
 
 interface INewUserProps{
-    authUser: User
+    authUser: User,
+    setNewUser: (user: User) => void 
 }
 
 const useStyles = makeStyles({
@@ -61,16 +62,10 @@ function NewUserComponent(props: INewUserProps){
     let setRole = (e: any) => {
         newUser.roles = e.currentTarget.value;
     }
-    let addUser = (e:SyntheticEvent) => {
-        project1Client.post('/users', {
-            id: 0,
-            username: newUser.username,
-            password: newUser.password,
-            firstName: newUser.firstName,
-            lastName: newUser.lastName,
-            email: newUser.email,
-            roles: newUser.roles
-        });
+    let addUser = async () => {        
+        let respones = await addNewUser(newUser.username, newUser.password, newUser.firstName, newUser.lastName, newUser.email);
+        props.setNewUser(respones);
+        console.log(respones);
     }
 
     return (

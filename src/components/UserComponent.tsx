@@ -5,8 +5,8 @@ import { getAllUsers, deleteUser } from '../remote/user-service';
 import { Link } from 'react-router-dom';
 
 interface IUserProps {
-    authUser: User;
-    editUser: (user: User) => void;
+    authUser: User,
+    setThisUser: (user: User) => void
 }   
 
 const useStyles = makeStyles({
@@ -23,7 +23,7 @@ const useStyles = makeStyles({
 });
 
 
-const UserComponent = (props: IUserProps) => {
+const ViewUserComponent = (props: IUserProps) => {
     
     const classes = useStyles();
 
@@ -42,7 +42,7 @@ const UserComponent = (props: IUserProps) => {
                         <td>{user.email}</td>
                         <td>{user.roles}</td>
                         <td><Button component={Link} to="/editUser" onClick={ () => {
-                            props.editUser({...user})}} variant="contained" color="secondary" size="medium">Edit User</Button>
+                            props.setThisUser({...user})}} variant="contained" color="secondary" size="medium">Edit User</Button>
                         </td>
                         <td><Button component={Link} to="/users" onClick={async () => {
                             await deleteUser(user.user_id)}} variant="contained" color="secondary" size="medium">Delete User</Button>
@@ -94,4 +94,4 @@ const UserComponent = (props: IUserProps) => {
 
 }
 
-export default UserComponent;
+export default ViewUserComponent;

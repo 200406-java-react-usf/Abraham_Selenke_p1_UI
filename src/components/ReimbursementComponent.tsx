@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles, InputLabel, Button } from '@material-ui/core';
 import { User } from '../models/user';
-import { getAllReimbursements, deleteReimbursement, getReimbursementById } from '../remote/reimbursement-service';
+import { getAllReimbursements, getReimbursementById } from '../remote/reimbursement-service';
 import { Reimbursements } from '../models/reimbursement';
 import { Link } from 'react-router-dom';
 
 interface IReimbursementProps {
-    authUser: User;
-    editReimbursement: (reimbursement: Reimbursements) => void;
+    authUser: User,
+    thisReimbursement: Reimbursements,
+    setThisReimbursement: (reimbursement: Reimbursements) => void;
 }   
 
 const useStyles = makeStyles({
@@ -24,7 +25,7 @@ const useStyles = makeStyles({
 });
 
 
-const ReimbursementComponent = (props: IReimbursementProps) => {
+const ViewReimbursementComponent = (props: IReimbursementProps) => {
     
     const classes = useStyles();
 
@@ -41,11 +42,10 @@ const ReimbursementComponent = (props: IReimbursementProps) => {
     }
 
     let reimbursements: any[] = [];
-
+    
     useEffect(() => {
         let fetchData = async () => {
             const response = await getAllReimbursements();
-            
             for(let reimbursement of response){
                 if((reimbursement.reimb_status == reimbStatus || reimbStatus == 'All') && (reimbursement.reimb_type == reimbType || reimbType == 'All')){
                     reimbursements.push(
@@ -56,17 +56,18 @@ const ReimbursementComponent = (props: IReimbursementProps) => {
                             <td>{reimbursement.reimb_status}</td>
                             <td>{reimbursement.reimb_type}</td>
                             <td><Button component={Link} to={`/reimbursement/${reimbursement.reimb_id}`} onClick={
-                                async () => { props.editReimbursement(await getReimbursementById(reimbursement.reimb_id));}}
+                                async () => { props.setThisReimbursement(await getReimbursementById(reimbursement.reimb_id));}}
                                 variant="contained" color="secondary" size="medium">Details</Button>
                             </td>
                     </tr>
                     )
-                }
-            }
+                }  
+            }            
+            
             setReimbursementsState(reimbursements)
         }
         fetchData();
-    }, [reimbStatus, reimbType, reimbursements]);
+    }, [reimbStatus, reimbType]);
     
     return (
         !props.authUser || (props.authUser.roles !== 'Manager') ?
@@ -117,4 +118,4 @@ const ReimbursementComponent = (props: IReimbursementProps) => {
 
 }
 
-export default ReimbursementComponent;
+export default ViewReimbursementComponent;

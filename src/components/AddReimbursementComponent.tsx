@@ -1,13 +1,14 @@
 import React, { SyntheticEvent, useState } from 'react';
 import { Typography, FormControl, InputLabel, Input, makeStyles, Button } from '@material-ui/core';
 import { User } from '../models/user';
-import {project1Client} from '../remote/project1-client';
+import { addNewReimbursement } from '../remote/reimbursement-service';
 import { Alert } from '@material-ui/lab';
 import { Link } from 'react-router-dom';
 import { Reimbursements } from '../models/reimbursement';
 
 interface INewReimbProps{
     authUser: User
+    setNewReimbursement: (reimbursement: Reimbursements) => void
 }
 
 const useStyles = makeStyles({
@@ -48,15 +49,10 @@ function NewReimbComponent(props: INewReimbProps){
         newReimbursement.reimb_type = e.currentTarget.value;
     }
 
-    let addReimbursement = (e: SyntheticEvent) => {
-
-        project1Client.post('/reimbursement', {
-            amount: newReimbursement.amount,
-            description: newReimbursement.description,
-            author_id: newReimbursement.author,
-            reimb_status: newReimbursement.reimb_status,
-            reimb_type: newReimbursement.reimb_type
-        });
+    let addReimbursement = async () => {
+        let respones = await addNewReimbursement(newReimbursement.amount, newReimbursement.description, newReimbursement.author, newReimbursement.reimb_status, newReimbursement.reimb_type);
+        props.setNewReimbursement(respones);
+        console.log(respones);
     }
 
     return (

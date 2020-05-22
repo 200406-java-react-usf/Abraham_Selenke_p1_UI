@@ -1,12 +1,13 @@
 import React, { SyntheticEvent, useState } from 'react';
 import { Typography, FormControl, InputLabel, Input, makeStyles, Button } from '@material-ui/core';
 import { User } from '../models/user';
-import {project1Client} from '../remote/project1-client';
+import { newUpdateUser } from '../remote/user-service';
 import { Link } from 'react-router-dom';
 
 interface IUpdateProps{
     authUser: User,
-    updateUser: User
+    newUser: User,
+    setNewUser: (user: User) => void
 }
 
 const useStyles = makeStyles({
@@ -22,18 +23,18 @@ const useStyles = makeStyles({
     }
 })
 
-function UpdateComponent(props: IUpdateProps){
+function EditUserComponent(props: IUpdateProps){
 
     const classes = useStyles();
 
-    let updateUserRole = props.updateUser.roles
-
-    const[user_id, setId] = useState(props.updateUser.user_id)
-    const[username, setUsername] = useState(props.updateUser.username);
-    const[password, setPassword] = useState(props.updateUser.password);
-    const[firstName, setFirstName] = useState(props.updateUser.firstName);
-    const[lastName, setLastName] = useState(props.updateUser.lastName);
-    const[email, setEmail] = useState(props.updateUser.email);
+    let updateUserRole = props.newUser.roles
+    //Gets the state of the current User
+    const[user_id, setId] = useState(props.newUser.user_id)
+    const[username, setUsername] = useState(props.newUser.username);
+    const[password, setPassword] = useState(props.newUser.password);
+    const[firstName, setFirstName] = useState(props.newUser.firstName);
+    const[lastName, setLastName] = useState(props.newUser.lastName);
+    const[email, setEmail] = useState(props.newUser.email);
     const[role, setRole] = useState(updateUserRole);
     const[errorMessage, setErrorMessage] = useState('');
     
@@ -75,17 +76,10 @@ function UpdateComponent(props: IUpdateProps){
         setRole(e.currentTarget.value);
     }
 
-    let updateUser = (e: SyntheticEvent) => {
-
-        project1Client.put('/users', {
-            user_id: user_id,
-            username: username,
-            password: password,
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            roles: role
-        });
+    let updateUser = async () => {
+        let respones = await newUpdateUser(user_id, username, password, firstName, lastName, email, role);
+        props.setNewUser(respones);
+        console.log(respones);
     }
 
     return (
@@ -172,4 +166,4 @@ function UpdateComponent(props: IUpdateProps){
 
 }
 
-export default UpdateComponent;
+export default EditUserComponent;

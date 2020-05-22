@@ -1,19 +1,19 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Button } from '@material-ui/core';
 import { User } from '../models/user';
-import { updateReimbursement } from '../remote/reimbursement-service';
+import { newUpdateReimbursement } from '../remote/reimbursement-service';
 import { Reimbursements } from '../models/reimbursement';
-import { UserReimbursements } from '../models/author-reimb';
+import { Link } from 'react-router-dom';
 
 interface IReimbursementProps {
-    authUser: User;
-    statusManagerReimbursement: Reimbursements;
-    statusUserReimbursement: UserReimbursements;
+    authUser: User,
+    thisReimbursement: Reimbursements,
+    setThisReimbursement: (reimbursement: Reimbursements) => void
 }   
 
 const useStyles = makeStyles({
     reimbursementContainer: {
-      textAlign: 'center',
+      textAlign: 'left',
       justifyContent: 'center',
       alignItems: 'center',
       display: 'flex',
@@ -27,69 +27,41 @@ const useStyles = makeStyles({
 const StatusUpdateReimbursementComponent = (props: IReimbursementProps) => {
     
     const classes = useStyles();
-   console.log('hello');
-   console.log(props.statusUserReimbursement);
    
-   
-    // let updateStatusApprovel = async () => {
-    //     let updateManager = {...props.statusManagerReimbursement}
-    //     let updateUser = {...props.statusUserReimbursement}
+    let updateStatusApprovel = async () => {
+        let update = {...props.thisReimbursement};
+
+        update.resolver_id = props.authUser.user_id;
+        //@ts-ignore
+        update.resolved = new Date();
+        update.reimb_status = 'Approved';
+
+        await newUpdateReimbursement(
+            update.reimb_id, update.amount,
+            update.description, update.resolver_id,
+            update.reimb_status, update.reimb_type);
         
-    //     updateManager.resolver_id = props.authUser.user_id;
-    //     //@ts-ignore
-    //     updateManager.resolved = Date.now();
-    //     updateManager.reimb_status = 'Approved';
+        props.setThisReimbursement(update);
+        console.log(update);
+    }
 
-    //     let updatedManagerReimb = await updateReimbursement(
-    //             updateManager.reimb_id, updateManager.amount,
-    //             updateManager.description, updateManager.author,
-    //             updateManager.reimb_status, updateManager.reimb_type);
+    let updateStatusDeny = async () => {
+        let update = {...props.thisReimbursement};
 
-    //     updateUser.resolver_id = props.authUser.user_id;
-    //     //@ts-ignore
-    //     updateUser.resolved = Date.now();
-    //     updateManager.reimb_status = 'Approved';
+        update.resolver_id = props.authUser.user_id;
+        //@ts-ignore
+        update.resolved = new Date;
+        update.reimb_status = 'Denied';
 
-    //     let updatedUserReimb = await updateReimbursement(
-    //             updateUser.reimb_id, updateUser.amount,
-    //             updateUser.description, updateManager.author,
-    //             updateUser.reimb_status, updateUser.reimb_type);
-
-    //     console.log(updatedManagerReimb);
-    //     console.log(updatedUserReimb);        
-    // }
-
-    // let updateStatusDen = async () => {
-    //     let updateManager = {...props.statusManagerReimbursement}
-    //     let updateUser = {...props.statusUserReimbursement}
-        
-    //     updateManager.resolver_id = props.authUser.user_id;
-    //     //@ts-ignore
-    //     updateManager.resolved = Date.now();
-    //     updateManager.reimb_status = 'Denied';
-
-    //     let updatedManagerReimb = await updateReimbursement(
-    //             updateManager.reimb_id, updateManager.amount,
-    //             updateManager.description, updateManager.author,
-    //             updateManager.reimb_status, updateManager.reimb_type);
-
-    //     updateUser.resolver_id = props.authUser.user_id;
-    //     //@ts-ignore
-    //     updateUser.resolved = Date.now();
-    //     updateManager.reimb_status = 'Denied';
-
-    //     let updatedUserReimb = await updateReimbursement(
-    //             updateUser.reimb_id, updateUser.amount,
-    //             updateUser.description, updateManager.author,
-    //             updateUser.reimb_status, updateUser.reimb_type);
-
-    //     console.log(updatedManagerReimb);
-    //     console.log(updatedUserReimb);         
-    // }
-
+        let response = await newUpdateReimbursement(
+            update.reimb_id, update.amount,
+            update.description, update.resolver_id,
+            update.reimb_status, update.reimb_type);
+        props.setThisReimbursement(update);
+        console.log(update);
+    }
+    
     return (
-        (props.authUser.roles !== 'Admin')
-        ?
         <>
             <div className={classes.reimbursementContainer}>
                 <form className={classes.reimbursementForm}>
@@ -97,68 +69,68 @@ const StatusUpdateReimbursementComponent = (props: IReimbursementProps) => {
                     <table className="table table-hover">
                         <thead>
                             <tr>
+                                <th scope="col">Information</th>
+                                <th scope="col">Information</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr key={props.thisReimbursement.reimb_id}>
                                 <th scope="row">Id</th>
-                                <th scope="row">Amount</th>
-                                <th scope="row">Submitted Time</th>
-                                <th scope="row">Description</th>
-                                <th scope="row">Author Id</th>
-                                <th scope="row">Resolved Time</th>
-                                <th scope="row">Resolver Id</th>
-                                <th scope="row">Status</th>
-                                <th scope="row">Type</th>
+                                <td>{props.thisReimbursement.reimb_id}</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {/* <tr key={updatedManagerReimb.reimb_id}>              
-                                <td>{updatedManagerReimb.reimb_id}</td>
-                                <td>{updatedManagerReimb.amount}</td>
-                                <td>{updatedManagerReimb.description}</td>
-                                <td>{updatedManagerReimb.reimb_status}</td>
-                                <td>{updatedManagerReimb.reimb_type}</td>
-                                
-                            </tr> */}
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-        </>
-        :
-        <>
-            <div className={classes.reimbursementContainer}>
-                <form className={classes.reimbursementForm}>
-                    <h1 >Reimbursement Information: Employee</h1>
-                    <table className="table table-hover">
-                        <thead>
                             <tr>
-                                <th scope="col">Id</th>
-                                <th scope="col">Amount</th>
-                                <th scope="col">Submitted Time</th>
-                                <th scope="col">Resolved Time</th>
-                                <th scope="col">Description</th>
-                                <th scope="col">Author Id</th>
-                                <th scope="col">Resolver Id</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Type</th>
-                                <th scope="col">Update</th>
-                                <th scope="col">Delete</th>
+                                <th scope="row">Amount</th>
+                                <td>{props.thisReimbursement.amount}</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {/* {reimbursementsState} */}
+                            <tr>    
+                                <th scope="row">Submitted Time</th>
+                                <td>{props.thisReimbursement.submitted}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Description</th>
+                                <td>{props.thisReimbursement.description}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Author Id</th>
+                                <td>{props.thisReimbursement.author}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Resolved Time</th>
+                                <td>{props.thisReimbursement.resolved}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Resolver Id</th>
+                                <td>{props.thisReimbursement.resolver_id}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Status</th>
+                                <td>{props.thisReimbursement.reimb_status}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Type</th>
+                                <td>{props.thisReimbursement.reimb_type}</td>
+                            </tr>
                         </tbody>
                     </table>
+                    {!props.thisReimbursement.resolved && props.authUser.roles === "Manager"
+                    ?
+                    <>
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: "white",
+                        }}>
+                    <Button component={Link} to="/home" onClick = {updateStatusApprovel} variant = "contained" color = "secondary" size = "medium">Approve</Button>
+                    <div style={{ marginLeft: '5rem' }}> </div>
+                    <Button component={Link} to="/home" onClick = {updateStatusDeny} variant = "contained" color = "secondary" size = "medium">Deny</Button>
+                    </div>
+                    </>:<></>
+                    }
                 </form>
             </div>
         </>
-        //!props.authUser || (props.authUser.roles !== 'Admin') 
-        //:
-        // <>
-        //     <div className={classes.reimbursementContainer}>
-        //         <form className={classes.reimbursementForm}>
-        //             <h1>Youre not authorized to view this page</h1>
-        //         </form>
-        //     </div>
-        // </>
     );
 
 }

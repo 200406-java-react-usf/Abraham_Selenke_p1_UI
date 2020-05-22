@@ -1,14 +1,14 @@
 import React, { SyntheticEvent, useState } from 'react';
 import { Typography, FormControl, InputLabel, Input, makeStyles, Button } from '@material-ui/core';
 import { User } from '../models/user';
-import {project1Client} from '../remote/project1-client';
+import { newUpdateReimbursement } from '../remote/reimbursement-service';
 import { Reimbursements } from '../models/reimbursement';
 import { Link } from 'react-router-dom';
-import { UserReimbursements } from '../models/author-reimb';
 
 interface IUpdateProps{
     authUser: User,
-    updateReimbursement: UserReimbursements
+    newReimbursement: Reimbursements,
+    setNewReimbursement: (reimbursement: Reimbursements) => void
 }
 
 const useStyles = makeStyles({
@@ -24,14 +24,17 @@ const useStyles = makeStyles({
     }
 })
 
-function UpdateReimbComponent(props: IUpdateProps){
+function EditReimbComponent(props: IUpdateProps){
 
     const classes = useStyles();
     
-    const[reimb_id, setId] = useState(props.updateReimbursement.reimb_id);
-    const[amount, setAmount] = useState(props.updateReimbursement.amount);
-    const[description, setDescription] = useState(props.updateReimbursement.description);
-    const[type, setType] = useState(props.updateReimbursement.reimb_type);
+    const[reimb_id, setId] = useState(props.newReimbursement.reimb_id);
+    const[amount, setAmount] = useState(props.newReimbursement.amount);
+    const[description, setDescription] = useState(props.newReimbursement.description);
+    const[type, setType] = useState(props.newReimbursement.reimb_type);
+    const[author_id, setAuthor] = useState(props.newReimbursement.author);
+    const[reimb_status, setStatus] = useState(props.newReimbursement.reimb_status);
+
     const[errorMessage, setErrorMessage] = useState('');
 
     let updateAmount = (e: any) => {
@@ -52,13 +55,10 @@ function UpdateReimbComponent(props: IUpdateProps){
         setType(e.currentTarget.value);
     }
     
-    let updateReimbursement = (e: SyntheticEvent) => {
-        project1Client.put('/reimbursement', {
-            reimb_id: reimb_id,
-            amount: amount,
-            description: description,
-            reimb_type: type
-        });
+    let updateReimbursement = async () => {
+        let respones = await newUpdateReimbursement(reimb_id, amount, description, author_id, reimb_status, type);
+        props.setNewReimbursement(respones);
+        console.log(respones);
     }
 
     return (
@@ -114,4 +114,4 @@ function UpdateReimbComponent(props: IUpdateProps){
 
 }
 
-export default UpdateReimbComponent;
+export default EditReimbComponent;
