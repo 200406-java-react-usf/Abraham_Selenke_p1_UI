@@ -8,7 +8,6 @@ import { User } from './models/user';
 import { Reimbursements } from './models/reimbursement';
 import NavbarComponent from './components/NavbarComponent';
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
-import RegisterComponent from './components/RegistrationComponent';
 import ViewUserComponent from './components/UserComponent';
 import EditUserComponent from './components/EditUserComponent';
 import ViewReimbursementComponent from './components/ReimbursementComponent';
